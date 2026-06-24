@@ -1,10 +1,10 @@
 import { createHmac, randomBytes } from "node:crypto";
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME ?? "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin123";
+const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || "").trim() || "admin";
+const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || "").trim() || "admin123";
 
 // Used to sign session tokens so they can't be forged
-const SECRET = process.env.AUTH_SECRET ?? "dev-secret-do-not-use-in-prod";
+const SECRET = (process.env.AUTH_SECRET || "").trim() || "dev-secret-do-not-use-in-prod";
 
 function sign(data: string): string {
   return createHmac("sha256", SECRET).update(data).digest("hex").slice(0, 16);
