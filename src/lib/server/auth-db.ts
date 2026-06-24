@@ -1,10 +1,10 @@
 import { createHmac, randomBytes } from "node:crypto";
 
-function getAdminUsername(): string {
+export function getAdminUsername(): string {
   const val = (process.env.ADMIN_USERNAME || "").trim();
   return val || "admin";
 }
-function getAdminPassword(): string {
+export function getAdminPassword(): string {
   const val = (process.env.ADMIN_PASSWORD || "").trim();
   return val || "admin123";
 }
@@ -48,7 +48,10 @@ export function validateCredentials(
   username: string,
   password: string,
 ): { token: string; username: string } | null {
-  if (username !== getAdminUsername() || password !== getAdminPassword()) return null;
+  if (username !== getAdminUsername() || password !== getAdminPassword()) {
+    console.log("[auth-db] validateCredentials FAILED", { username, password, expectedUser: getAdminUsername(), expectedPass: getAdminPassword() });
+    return null;
+  }
   const token = encodeSession(username);
   return { token, username };
 }
