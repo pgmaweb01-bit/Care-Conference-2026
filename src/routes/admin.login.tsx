@@ -27,9 +27,15 @@ function AdminLogin() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const ok = await login(username, password);
-    setLoading(false);
-    if (!ok) setError("Invalid username or password");
+    try {
+      const ok = await login(username, password);
+      if (!ok) setError("Invalid username or password");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(err instanceof Error ? err.message : "Login failed. Check console for details.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (auth.status === "loading") {

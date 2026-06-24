@@ -50,7 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const result = await serverLogin({ username, password });
+    let result: Awaited<ReturnType<typeof serverLogin>>;
+    try {
+      result = await serverLogin({ username, password });
+    } catch (err) {
+      console.error("[auth] serverLogin threw:", err);
+      throw err;
+    }
     if (!result) return false;
     setCookie(SESSION_COOKIE, result.token);
     setAuth({ status: "authenticated", username: result.username });
