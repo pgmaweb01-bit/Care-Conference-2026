@@ -36,12 +36,18 @@ function AdminLayout() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  const isLoginPage = pathname === "/admin/login";
+
   if (auth.status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary/60">
         <div className="text-sm text-muted-foreground">Loading…</div>
       </div>
     );
+  }
+
+  if (isLoginPage) {
+    return <Outlet />;
   }
 
   if (auth.status === "unauthenticated") {
