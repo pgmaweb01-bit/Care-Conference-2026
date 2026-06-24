@@ -1,13 +1,21 @@
 import { createHmac, randomBytes } from "node:crypto";
 
-const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || "").trim() || "admin";
-const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || "").trim() || "admin123";
+function getAdminUsername(): string {
+  const val = (process.env.ADMIN_USERNAME || "").trim();
+  return val || "admin";
+}
+function getAdminPassword(): string {
+  const val = (process.env.ADMIN_PASSWORD || "").trim();
+  return val || "admin123";
+}
 
-// Used to sign session tokens so they can't be forged
-const SECRET = (process.env.AUTH_SECRET || "").trim() || "dev-secret-do-not-use-in-prod";
+function getSecret(): string {
+  const val = (process.env.AUTH_SECRET || "").trim();
+  return val || "dev-secret-do-not-use-in-prod";
+}
 
 function sign(data: string): string {
-  return createHmac("sha256", SECRET).update(data).digest("hex").slice(0, 16);
+  return createHmac("sha256", getSecret()).update(data).digest("hex").slice(0, 16);
 }
 
 function encodeSession(username: string): string {
@@ -40,7 +48,7 @@ export function validateCredentials(
   username: string,
   password: string,
 ): { token: string; username: string } | null {
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) return null;
+  if (username !== getAdminUsername() || password !== getAdminPassword()) return null;
   const token = encodeSession(username);
   return { token, username };
 }
