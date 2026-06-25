@@ -36,7 +36,7 @@ function RegisterPage() {
               <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Nigeria 2026
             </div>
-            <h1 className="mt-4 font-display text-5xl font-black leading-[1.05] tracking-tight text-foreground">
+            <h1 className="mt-4 font-display text-3xl sm:text-5xl font-black leading-[1.05] tracking-tight text-foreground">
               Register for{" "}
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 Care Conference
