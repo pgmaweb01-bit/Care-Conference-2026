@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { validateCredentials, getSession, destroySession, getAdminUsername, getAdminPassword } from "./server/auth-db";
 
+type LoginData = { username: string; password: string };
+
 export const login = createServerFn({ method: "POST" })
   .validator((d: unknown) => d as LoginData)
   .handler(async ({ data }) => {

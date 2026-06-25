@@ -109,3 +109,62 @@
     font-weight: 900;
   }
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.769 0.188 70 / 0.3); }
+  50% { box-shadow: 0 0 0 8px oklch(0.769 0.188 70 / 0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out both; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out both; }
+.animate-slide-right { animation: slideInRight 0.4s ease-out both; }
+.animate-slide-left { animation: slideInLeft 0.4s ease-out both; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+@media print {
+  @page { margin: 0.4in; size: auto; }
+  body { background: #fff !important; }
+  body * { visibility: hidden; }
+  .pass-print-area, .pass-print-area * { visibility: visible; }
+  .pass-print-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0.25in;
+  }
+  .no-print { display: none !important; }
+}

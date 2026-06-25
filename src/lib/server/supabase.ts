@@ -1,9 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.SUPABASE_URL ?? "";
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? "";
-
 function getClient() {
+  const SUPABASE_URL = process.env.SUPABASE_URL ?? "";
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? "";
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     throw new Error(
       "Supabase not configured. Set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables. " +
@@ -11,6 +10,18 @@ function getClient() {
     );
   }
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+}
+
+async function nextId(): Promise<string> {
+  const { data: rows, error } = await getClient()
+    .from("registrations")
+    .select("id")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) throw error;
+  const lastNum = rows && rows.length > 0 ? parseInt((rows[0] as { id: string }).id.replace("MYC2026-", ""), 10) : 0;
+  const next = isNaN(lastNum) ? 1 : lastNum + 1;
+  return "MYC2026-" + String(next).padStart(5, "0");
 }
 
 export type DbAttendee = {
@@ -22,11 +33,16 @@ export type DbAttendee = {
 };
 
 export async function getAllRegistrations(): Promise<DbAttendee[]> {
-  const { data, error } = await getClient()
+  const client = getClient();
+  const { data, error } = await client
     .from("registrations")
     .select("*")
     .order("created_at", { ascending: false });
-  if (error) throw error;
+  if (error) {
+    console.error("[getAllRegistrations] query error:", error);
+    throw error;
+  }
+  console.log(`[getAllRegistrations] returned ${data?.length ?? 0} rows`);
   return data ?? [];
 }
 
@@ -46,14 +62,10 @@ export async function saveRegistration(
   type: DbAttendee["type"],
   data: Record<string, unknown>,
 ): Promise<DbAttendee> {
-  // Get next ID from the sequence function
-  const { data: idResult, error: idError } = await getClient().rpc(
-    "next_registration_id",
-  );
-  if (idError) throw idError;
+  const id = await nextId();
 
   const record = {
-    id: idResult as string,
+    id,
     type,
     data,
   };

@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAuth({ status: "unauthenticated" });
       return;
     }
-    checkSession(token).then((session) => {
+    checkSession({ data: token }).then((session) => {
       setAuth(
         session
           ? { status: "authenticated", username: session.username }
@@ -51,25 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (username: string, password: string) => {
     let result: Awaited<ReturnType<typeof serverLogin>>;
-    // Debug: intercept raw seroval response before deserialization
-    const origFetch = window.fetch.bind(window);
-    window.fetch = async (input, init) => {
-      const resp = await origFetch(input, init);
-      const url = typeof input === "string" ? input : input?.url;
-      if (url && url.includes("/_serverFn/")) {
-        const ct = resp.headers.get("content-type") || "";
-        console.log("[fetch-debug] URL:", url);
-        console.log("[fetch-debug] Status:", resp.status);
-        console.log("[fetch-debug] x-tss-serialized:", resp.headers.get("x-tss-serialized"));
-        console.log("[fetch-debug] content-type:", ct);
-        const body = await resp.clone().text();
-        console.log("[fetch-debug] Body:", body.slice(0, 5000));
-        window.fetch = origFetch;
-      }
-      return resp;
-    };
     try {
-      result = await serverLogin({ username, password });
+      result = await serverLogin({ data: { username, password } });
     } catch (err) {
       console.error("[auth] serverLogin threw:", err);
       throw err;
@@ -83,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     const token = getCookie(SESSION_COOKIE);
     if (token) {
-      await serverLogout(token);
+      await serverLogout({ data: token });
       deleteCookie(SESSION_COOKIE);
     }
     setAuth({ status: "unauthenticated" });

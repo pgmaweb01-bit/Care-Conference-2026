@@ -20,7 +20,7 @@ export const Route = createFileRoute("/register/speaker")({
   component: SpeakerRegister,
 });
 
-function SpeakerRegister() {
+export function SpeakerRegister() {
   const [record, setRecord] = useState<AttendeeRecord | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,7 +38,7 @@ function SpeakerRegister() {
           reader.readAsDataURL(v);
         });
         try {
-          const result = await uploadFile({ filename: v.name, content });
+          const result = await uploadFile({ data: { filename: v.name, content } });
           data[k] = result.url;
         } catch {
           data[k] = v.name;
@@ -89,15 +89,13 @@ function SpeakerRegister() {
                       placeholder="Dr., Prof., Mr., Mrs., Ms."
                     />
                   </Field>
-                  <Field label="Gender">
-                    <select name="gender" className={inputCls} defaultValue="">
+                  <Field label="Gender" required>
+                    <select name="gender" required className={inputCls} defaultValue="">
                       <option value="" disabled>
                         Select
                       </option>
-                      <option>Female</option>
                       <option>Male</option>
-                      <option>Non-binary</option>
-                      <option>Prefer not to say</option>
+                      <option>Female</option>
                     </select>
                   </Field>
                   <Field label="Nationality">
@@ -289,9 +287,22 @@ function SpeakerRegister() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex h-12 items-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-60"
+                  className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary via-primary to-primary/80 px-8 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-60"
                 >
-                  {submitting ? "Submitting…" : "Submit speaker registration"}
+                  <span className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/10 to-gold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <span className="relative z-10">
+                    {submitting ? (
+                      <span className="inline-flex items-center gap-2">
+                        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Submitting…
+                      </span>
+                    ) : (
+                      "Submit speaker registration"
+                    )}
+                  </span>
                 </button>
               </div>
             </form>

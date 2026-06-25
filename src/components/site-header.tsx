@@ -2,35 +2,34 @@ import { Link } from "@tanstack/react-router";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[image:var(--gradient-band)] text-primary-foreground font-display text-lg font-bold">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary via-primary to-gold/80 text-primary-foreground font-display text-lg font-bold shadow-md transition-transform group-hover:scale-105">
             C
           </div>
           <div className="leading-tight">
             <div className="font-display text-base font-semibold text-foreground">
               Care Conference
             </div>
-            <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               2026 · Nigeria
             </div>
           </div>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-          <Link to="/register" className="hover:text-foreground transition-colors">
-            Attendee
+        <div className="flex items-center gap-6">
+          <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
+            <Link to="/register" className="font-medium transition-colors hover:text-foreground">
+              Register
+            </Link>
+          </nav>
+          <Link
+            to="/register"
+            className="inline-flex h-10 items-center rounded-full bg-gradient-to-r from-primary to-primary/80 px-5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 active:scale-[0.97]"
+          >
+            Register
           </Link>
-          <Link to="/register/speaker" className="hover:text-foreground transition-colors">
-            Speaker
-          </Link>
-        </nav>
-        <Link
-          to="/register"
-          className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
-        >
-          Register
-        </Link>
+        </div>
       </div>
     </header>
   );

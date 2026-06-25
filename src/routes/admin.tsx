@@ -71,50 +71,54 @@ function AdminLayout() {
 
   return (
     <div className="flex min-h-screen bg-secondary/60">
-      <aside className="hidden w-72 shrink-0 flex-col bg-primary text-primary-foreground md:flex">
-        <div className="px-7 pb-10 pt-8">
-          <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold">
+      <aside className="relative hidden w-72 shrink-0 flex-col bg-primary text-primary-foreground md:flex">
+        <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent pointer-events-none" />
+        <div className="relative px-7 pb-10 pt-8">
+          <div className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse-glow" />
             Care Conference
           </div>
-          <h1 className="mt-1 font-display text-2xl font-extrabold leading-none tracking-tight">
-            PURPLE
-            <br />
-            GLOBAL
-          </h1>
+<h1 className="mt-3 font-display text-2xl font-extrabold leading-none tracking-tight">
+              <span className="text-white">CARE</span>
+              <br />
+              <span className="text-gold">CONFERENCE</span>
+              <br />
+              <span className="text-xs tracking-widest text-gold/60">2026</span>
+            </h1>
         </div>
-        <nav className="flex-1 space-y-1.5 px-4">
+        <nav className="relative flex-1 space-y-1 px-3">
           {nav.map((item) => {
             const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-all ${
+                className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${
                   active
-                    ? "bg-gold text-gold-foreground shadow-lg shadow-black/20"
-                    : "text-primary-foreground/70 hover:bg-white/5 hover:text-primary-foreground"
+                    ? "bg-gradient-to-r from-gold to-gold/90 text-gold-foreground shadow-lg shadow-black/20"
+                    : "text-primary-foreground/60 hover:bg-white/5 hover:text-primary-foreground"
                 }`}
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className={`h-4 w-4 transition-transform duration-200 ${active ? "scale-110" : "group-hover:scale-110"}`} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="mt-auto border-t border-white/10 p-6">
+        <div className="relative mt-auto border-t border-white/5 p-6">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gold/15 font-bold text-gold">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 font-bold text-gold shadow-inner">
               {auth.username.charAt(0).toUpperCase()}
             </div>
             <div>
-              <div className="text-sm font-bold">{auth.username}</div>
-              <div className="text-xs text-primary-foreground/60">2026 Coordinator</div>
+              <div className="text-sm font-bold text-white">{auth.username}</div>
+              <div className="text-xs text-primary-foreground/50">Admin</div>
             </div>
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             <Link
               to="/"
-              className="flex items-center gap-2 text-xs font-medium text-primary-foreground/60 hover:text-gold"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium text-primary-foreground/50 transition-all hover:bg-white/5 hover:text-gold"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Back to site
             </Link>
@@ -123,7 +127,7 @@ function AdminLayout() {
                 logout();
                 router.navigate({ to: "/admin/login" });
               }}
-              className="flex items-center gap-2 text-xs font-medium text-primary-foreground/60 hover:text-gold"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium text-primary-foreground/50 transition-all hover:bg-white/5 hover:text-gold"
             >
               <LogOut className="h-3.5 w-3.5" /> Sign out
             </button>

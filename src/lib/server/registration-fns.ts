@@ -1,27 +1,13 @@
-import * as jsonDb from "./db";
 import * as supabaseDb from "./supabase";
+import { sendConfirmationEmail } from "./confirmation-email";
 
 export type { AttendeeRecord } from "./db";
 
-const useSupabase = !!process.env.SUPABASE_URL;
-
-function adapter() {
-  if (useSupabase) {
-    return {
-      getAllRegistrations: () => supabaseDb.getAllRegistrations().then(mapRow),
-      saveRegistration: (type: "attendee" | "speaker", data: Record<string, unknown>) =>
-        supabaseDb.saveRegistration(type, data).then(mapRow),
-      findRegistration: (id: string) =>
-        supabaseDb.findRegistration(id).then((r) => (r ? mapRow(r) : undefined)),
-      setCheckIn: (id: string, checkedIn: boolean) =>
-        supabaseDb.setCheckIn(id, checkedIn).then((r) => (r ? mapRow(r) : undefined)),
-      deleteRegistration: (id: string) => supabaseDb.deleteRegistration(id),
-    };
-  }
-  return jsonDb;
+if (!process.env.SUPABASE_URL) {
+  console.error("[registrations] SUPABASE_URL is NOT SET — registrations will fail");
 }
 
-function mapRow(r: supabaseDb.DbAttendee): jsonDb.AttendeeRecord {
+function mapRow(r: supabaseDb.DbAttendee) {
   return {
     id: r.id,
     type: r.type,
@@ -31,27 +17,31 @@ function mapRow(r: supabaseDb.DbAttendee): jsonDb.AttendeeRecord {
   };
 }
 
-const store = adapter();
-
 export function getAllRegistrations() {
-  return store.getAllRegistrations();
+  return supabaseDb.getAllRegistrations().then((rows) => rows.map(mapRow));
 }
 
-export function saveRegistration(
+export async function saveRegistration(
   type: "attendee" | "speaker",
   data: Record<string, unknown>,
 ) {
-  return store.saveRegistration(type, data);
+  const result = await supabaseDb.saveRegistration(type, data).then(mapRow);
+  const email = String((result.data as Record<string, unknown>).email ?? "");
+  console.log(`[email] Sending confirmation to ${email}, id=${result.id}`);
+  await sendConfirmationEmail(result).catch((err) =>
+    console.error(`[email] Failed:`, err),
+  );
+  return result;
 }
 
 export function findRegistration(id: string) {
-  return store.findRegistration(id);
+  return supabaseDb.findRegistration(id).then((r) => (r ? mapRow(r) : undefined));
 }
 
 export function setCheckIn(id: string, checkedIn: boolean) {
-  return store.setCheckIn(id, checkedIn);
+  return supabaseDb.setCheckIn(id, checkedIn).then((r) => (r ? mapRow(r) : undefined));
 }
 
 export function deleteRegistration(id: string) {
-  return store.deleteRegistration(id);
+  return supabaseDb.deleteRegistration(id);
 }

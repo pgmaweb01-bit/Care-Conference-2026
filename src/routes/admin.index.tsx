@@ -15,7 +15,7 @@ import {
   Area,
   CartesianGrid,
 } from "recharts";
-import { Users, Mic, Globe2, CheckCircle2, Clock, TrendingUp } from "lucide-react";
+import { Users, Mic, Globe2, CheckCircle2, Clock, TrendingUp, ArrowUpRight } from "lucide-react";
 import { useRegistrations } from "@/lib/use-registrations";
 
 export const Route = createFileRoute("/admin/")({
@@ -120,59 +120,99 @@ function AdminOverview() {
         {statCards.map((s) => (
           <div
             key={s.label}
-            className={`group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border-t-4 ${
-              s.accent === "gold" ? "border-t-gold" : "border-t-primary"
+            className={`group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
+              s.accent === "gold"
+                ? "hover:border-gold/30 hover:shadow-gold/5"
+                : "hover:border-primary/20 hover:shadow-primary/5"
             }`}
           >
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+            <div className={`absolute inset-x-0 top-0 h-1 ${s.accent === "gold" ? "bg-gradient-to-r from-gold/80 to-gold" : "bg-gradient-to-r from-primary/80 to-primary"}`} />
+            <div className="relative flex items-center justify-between">
+              <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 {s.label}
               </div>
-              <s.icon className={`h-4 w-4 ${s.accent === "gold" ? "text-gold" : "text-primary"}`} />
+              <div className={`rounded-lg p-2 ${s.accent === "gold" ? "bg-gold/10 text-gold" : "bg-primary/10 text-primary"}`}>
+                <s.icon className="h-4 w-4" />
+              </div>
             </div>
-            <div className="mt-3 font-display text-4xl font-extrabold tracking-tight text-foreground">
-              {s.value}
+            <div className="relative mt-4 flex items-baseline gap-2">
+              <span className="font-display text-4xl font-extrabold tracking-tight text-foreground">
+                {s.value}
+              </span>
+            </div>
+            <div className={`relative mt-3 h-1.5 rounded-full bg-secondary/80 overflow-hidden`}>
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  s.accent === "gold" ? "bg-gold/40" : "bg-primary/40"
+                }`}
+                style={{ width: `${Math.min(100, (s.value / (stats.total || 1)) * 100)}%` }}
+              />
             </div>
           </div>
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-border bg-card p-6 lg:col-span-2">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="font-display text-lg text-foreground">Registration Trend</h3>
-            <span className="text-xs text-muted-foreground">Cumulative & daily</span>
+            <div>
+              <h3 className="font-display text-lg text-foreground">Registration Trend</h3>
+              <p className="text-xs text-muted-foreground">Cumulative registrations over time</p>
+            </div>
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium text-primary">
+              {trend.length > 0 ? `${trend[trend.length - 1].total} total` : "No data"}
+            </span>
           </div>
           <div className="h-72">
             <ResponsiveContainer>
               <AreaChart data={trend}>
                 <defs>
                   <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.257 0.09 281)" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="oklch(0.257 0.09 281)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="oklch(0.257 0.09 281)" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="oklch(0.257 0.09 281)" stopOpacity={0.02} />
+                  </linearGradient>
+                  <linearGradient id="gradGold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.769 0.188 70)" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="oklch(0.769 0.188 70)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.92 0.01 257)" />
-                <XAxis dataKey="day" stroke="oklch(0.55 0.03 257)" fontSize={12} />
-                <YAxis stroke="oklch(0.55 0.03 257)" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.92 0.01 257)" strokeOpacity={0.5} />
+                <XAxis dataKey="day" stroke="oklch(0.65 0.03 257)" fontSize={12} tickLine={false} />
+                <YAxis stroke="oklch(0.65 0.03 257)" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.92 0.01 257)" }}
+                  contentStyle={{
+                    borderRadius: 12,
+                    border: "1px solid oklch(0.92 0.01 257)",
+                    boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+                    padding: "8px 12px",
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="registrations"
+                  stroke="oklch(0.769 0.188 70)"
+                  fill="url(#gradGold)"
+                  strokeWidth={2}
+                  strokeDasharray="4 3"
                 />
                 <Area
                   type="monotone"
                   dataKey="total"
                   stroke="oklch(0.257 0.09 281)"
                   fill="url(#grad)"
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6">
-          <h3 className="mb-4 font-display text-lg text-foreground">By Country</h3>
-          <div className="h-72">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <div>
+            <h3 className="font-display text-lg text-foreground">By Country</h3>
+            <p className="text-xs text-muted-foreground">Top 6 represented countries</p>
+          </div>
+          <div className="mt-2 h-72">
             <ResponsiveContainer>
               <PieChart>
                 <Pie
@@ -181,13 +221,18 @@ function AdminOverview() {
                   nameKey="name"
                   innerRadius={50}
                   outerRadius={90}
-                  paddingAngle={2}
+                  paddingAngle={3}
+                  strokeWidth={0}
                 >
                   {byCountry.map((_, i) => (
                     <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>
-                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Legend
+                  wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
+                  iconType="circle"
+                  iconSize={8}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -195,61 +240,83 @@ function AdminOverview() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-card p-6">
-          <h3 className="mb-4 font-display text-lg text-foreground">Professional Categories</h3>
-          <div className="h-64">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <div>
+            <h3 className="font-display text-lg text-foreground">Professional Categories</h3>
+            <p className="text-xs text-muted-foreground">Distribution across fields</p>
+          </div>
+          <div className="mt-4 h-64">
             <ResponsiveContainer>
               <BarChart data={byProfession} layout="vertical" margin={{ left: 20 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="oklch(0.92 0.01 257)"
+                  strokeOpacity={0.5}
                   horizontal={false}
                 />
-                <XAxis type="number" stroke="oklch(0.55 0.03 257)" fontSize={12} />
+                <XAxis type="number" stroke="oklch(0.65 0.03 257)" fontSize={12} tickLine={false} />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  stroke="oklch(0.55 0.03 257)"
+                  stroke="oklch(0.65 0.03 257)"
                   fontSize={12}
                   width={120}
+                  tickLine={false}
                 />
                 <Tooltip
-                  contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.92 0.01 257)" }}
+                  contentStyle={{
+                    borderRadius: 12,
+                    border: "1px solid oklch(0.92 0.01 257)",
+                    boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+                    padding: "8px 12px",
+                  }}
                 />
-                <Bar dataKey="value" fill="oklch(0.769 0.188 70)" radius={[0, 6, 6, 0]} />
+                <Bar
+                  dataKey="value"
+                  fill="oklch(0.769 0.188 70)"
+                  radius={[0, 8, 8, 0]}
+                  maxBarSize={32}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="font-display text-lg text-foreground">Recent Registrations</h3>
+            <div>
+              <h3 className="font-display text-lg text-foreground">Recent Registrations</h3>
+              <p className="text-xs text-muted-foreground">Latest sign-ups</p>
+            </div>
             <Link
               to="/admin/attendees"
-              className="text-xs font-medium text-primary hover:underline"
+              className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1.5 text-[11px] font-medium text-primary transition-all hover:bg-primary/20"
             >
-              View all
+              View all <ArrowUpRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="divide-y divide-border">
             {records
               .slice(-6)
               .reverse()
-              .map((r) => {
+              .map((r, idx) => {
                 const d = r.data as { fullName?: string; organization?: string };
+                const initial = (d.fullName ?? "A").charAt(0).toUpperCase();
                 return (
-                  <div key={r.id} className="flex items-center justify-between py-3">
-                    <div className="min-w-0">
+                  <div key={r.id} className="flex items-center gap-3 py-3 transition-colors hover:bg-secondary/30 -mx-2 px-2 rounded-lg">
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ${r.type === "speaker" ? "bg-gold/20 text-gold-foreground" : "bg-primary/10 text-primary"}`}>
+                      {initial}
+                    </div>
+                    <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium text-foreground">
                         {d.fullName ?? "—"}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {d.organization ?? "—"} · <span className="font-mono">{r.id}</span>
+                        {d.organization ?? "—"}
                       </div>
                     </div>
                     <span
-                      className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider ${r.type === "speaker" ? "bg-gold/20 text-gold-foreground" : "bg-secondary text-secondary-foreground"}`}
+                      className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${r.type === "speaker" ? "bg-gold/15 text-gold-foreground" : "bg-secondary text-secondary-foreground"}`}
                     >
                       {r.type}
                     </span>
@@ -257,7 +324,7 @@ function AdminOverview() {
                 );
               })}
             {records.length === 0 && (
-              <div className="py-6 text-center text-sm text-muted-foreground">
+              <div className="py-8 text-center text-sm text-muted-foreground">
                 No registrations yet.
               </div>
             )}

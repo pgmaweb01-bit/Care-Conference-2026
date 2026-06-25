@@ -94,34 +94,47 @@ function Reports() {
 
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-      {reports.map((r) => (
-        <div key={r.id} className="flex flex-col rounded-2xl border border-border bg-card p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
-              <FileSpreadsheet className="h-5 w-5" />
+      {reports.map((r) => {
+        const icons = [
+          { bg: "bg-primary/10", text: "text-primary" },
+          { bg: "bg-gold/10", text: "text-gold" },
+          { bg: "bg-emerald-500/10", text: "text-emerald-600" },
+          { bg: "bg-sky-500/10", text: "text-sky-600" },
+          { bg: "bg-violet-500/10", text: "text-violet-600" },
+          { bg: "bg-rose-500/10", text: "text-rose-600" },
+        ];
+        const c = icons[reports.indexOf(r) % icons.length];
+        return (
+          <div key={r.id} className="group flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
+            <div className="flex items-start justify-between">
+              <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${c.bg} ${c.text} transition-transform group-hover:scale-110`}>
+                <FileSpreadsheet className="h-5 w-5" />
+              </div>
+              <span className="rounded-full bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                {r.count} {r.count === 1 ? "row" : "rows"}
+              </span>
             </div>
-            <span className="text-xs font-medium text-muted-foreground">{r.count} rows</span>
+            <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{r.title}</h3>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">{r.description}</p>
+            <div className="mt-5 flex gap-2">
+              <button
+                onClick={() => downloadCSV(`${r.id}.csv`, r.rows())}
+                disabled={r.count === 0}
+                className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.97] disabled:opacity-50 disabled:hover:shadow-none"
+              >
+                <Download className="h-3.5 w-3.5" /> CSV
+              </button>
+              <button
+                onClick={() => downloadCSV(`${r.id}.xls`, r.rows())}
+                disabled={r.count === 0}
+                className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-xs font-medium shadow-sm transition-all hover:border-gold/30 hover:bg-gold/5 hover:text-gold-foreground active:scale-[0.97] disabled:opacity-50"
+              >
+                <Download className="h-3.5 w-3.5" /> Excel
+              </button>
+            </div>
           </div>
-          <h3 className="mt-4 font-display text-lg text-foreground">{r.title}</h3>
-          <p className="mt-1 flex-1 text-sm text-muted-foreground">{r.description}</p>
-          <div className="mt-5 flex gap-2">
-            <button
-              onClick={() => downloadCSV(`${r.id}.csv`, r.rows())}
-              disabled={r.count === 0}
-              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-            >
-              <Download className="h-3.5 w-3.5" /> CSV
-            </button>
-            <button
-              onClick={() => downloadCSV(`${r.id}.xls`, r.rows())}
-              disabled={r.count === 0}
-              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-xs font-medium hover:bg-secondary disabled:opacity-50"
-            >
-              <Download className="h-3.5 w-3.5" /> Excel
-            </button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

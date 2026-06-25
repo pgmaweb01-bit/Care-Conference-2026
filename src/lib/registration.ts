@@ -10,26 +10,36 @@ import {
 export type { AttendeeRecord };
 
 export function getAllRegistrations(): Promise<AttendeeRecord[]> {
-  return serverGetAll();
+  console.log("[registration.ts] calling serverGetAll()");
+  return serverGetAll().then(
+    (result) => {
+      console.log("[registration.ts] serverGetAll success:", Array.isArray(result) ? `array(${result.length})` : typeof result);
+      return result;
+    },
+    (err) => {
+      console.error("[registration.ts] serverGetAll error:", err);
+      throw err;
+    },
+  );
 }
 
 export function saveRegistration(
   type: AttendeeRecord["type"],
   data: Record<string, unknown>,
 ): Promise<AttendeeRecord> {
-  return serverSave({ type, data });
+  return serverSave({ data: { type, data } });
 }
 
 export function findRegistration(id: string): Promise<AttendeeRecord | undefined> {
-  return serverFind(id);
+  return serverFind({ data: id });
 }
 
 export function setCheckIn(id: string, checkedIn: boolean): Promise<AttendeeRecord | undefined> {
-  return serverCheckIn({ id, checkedIn });
+  return serverCheckIn({ data: { id, checkedIn } });
 }
 
 export function deleteRegistration(id: string): Promise<void> {
-  return serverDelete(id).then(() => undefined);
+  return serverDelete({ data: id }).then(() => undefined);
 }
 
 export function downloadCSV(filename: string, rows: Record<string, unknown>[]) {

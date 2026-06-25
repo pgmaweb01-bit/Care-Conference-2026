@@ -72,14 +72,16 @@ function Communications() {
     setSending(true);
     try {
       await sendCampaign({
-        to: recipients
-          .map((r) => ({
-            name: (r.data as { fullName?: string }).fullName ?? "Attendee",
-            email: (r.data as { email?: string }).email ?? "",
-          }))
-          .filter((r) => r.email),
-        subject,
-        body,
+        data: {
+          to: recipients
+            .map((r) => ({
+              name: (r.data as { fullName?: string }).fullName ?? "Attendee",
+              email: (r.data as { email?: string }).email ?? "",
+            }))
+            .filter((r) => r.email),
+          subject,
+          body,
+        },
       });
       setSent(recipients.length);
     } catch (e) {
@@ -92,27 +94,31 @@ function Communications() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
-        <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-primary" />
-            <h2 className="font-display text-xl">Email Campaign</h2>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Mail className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-xl font-extrabold text-foreground">Email Campaign</h2>
+              <p className="text-sm text-muted-foreground">
+                Compose and send updates to a targeted audience. Tokens like{" "}
+                <code className="rounded bg-secondary px-1 text-[11px]">{"{{name}}"}</code> and{" "}
+                <code className="rounded bg-secondary px-1 text-[11px]">{"{{id}}"}</code> are personalised per
+                recipient.
+              </p>
+            </div>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Compose and send updates to a targeted audience. Tokens like{" "}
-            <code className="rounded bg-secondary px-1">{"{{name}}"}</code> and{" "}
-            <code className="rounded bg-secondary px-1">{"{{id}}"}</code> are personalised per
-            recipient.
-          </p>
 
           <div className="mt-6 space-y-5">
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Audience
               </label>
               <select
                 value={audience}
                 onChange={(e) => setAudience(e.target.value as typeof audience)}
-                className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
+                className="w-full rounded-xl border border-input bg-card px-3 py-2.5 text-sm shadow-sm transition-all focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
               >
                 {audiences.map((a) => (
                   <option key={a.id} value={a.id}>
@@ -123,7 +129,7 @@ function Communications() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Template
               </label>
               <div className="flex flex-wrap gap-2">
@@ -131,7 +137,7 @@ function Communications() {
                   <button
                     key={t.id}
                     onClick={() => applyTemplate(t.id)}
-                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium hover:bg-secondary"
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium shadow-sm transition-all hover:border-gold/30 hover:bg-gold/5 hover:text-gold-foreground"
                   >
                     {t.label}
                   </button>
@@ -140,25 +146,27 @@ function Communications() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Subject
               </label>
               <input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
+                className="w-full rounded-xl border border-input bg-card px-3 py-2.5 text-sm shadow-sm transition-all placeholder:text-muted-foreground/50 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+                placeholder="Enter email subject"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Message
               </label>
               <textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={10}
-                className="w-full rounded-lg border border-input bg-card px-3 py-2.5 font-mono text-sm focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
+                className="w-full rounded-xl border border-input bg-card px-3 py-2.5 font-mono text-sm shadow-sm transition-all placeholder:text-muted-foreground/50 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+                placeholder="Write your message here…"
               />
             </div>
 
@@ -170,38 +178,47 @@ function Communications() {
               <button
                 onClick={send}
                 disabled={sending || !subject || recipients.length === 0}
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary/90 px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-60 disabled:hover:shadow-none"
               >
                 <Send className="h-4 w-4" /> {sending ? "Sending…" : "Send campaign"}
               </button>
             </div>
 
             {sent !== null && (
-              <div className="rounded-lg border border-gold/40 bg-gold/10 px-4 py-3 text-sm text-foreground">
-                ✓ Campaign queued for delivery to {sent} recipient{sent === 1 ? "" : "s"}.
+              <div className="animate-fade-in rounded-xl border border-gold/30 bg-gold/5 px-4 py-3 text-sm font-medium text-foreground">
+                <span className="text-gold">✓</span> Campaign queued for delivery to{" "}
+                <strong>{sent}</strong> recipient{sent === 1 ? "" : "s"}.
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <aside className="rounded-2xl border border-border bg-card p-6">
+      <aside className="rounded-2xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-primary" />
-          <h3 className="font-display text-lg">Preview Recipients</h3>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Users className="h-4 w-4" />
+          </div>
+          <h3 className="font-display text-lg font-extrabold text-foreground">Preview Recipients</h3>
         </div>
-        <ul className="mt-4 max-h-[520px] space-y-3 overflow-y-auto pr-1">
+        <ul className="mt-4 max-h-[520px] space-y-2 overflow-y-auto pr-1">
           {recipients.slice(0, 30).map((r) => {
             const d = r.data as { fullName?: string; email?: string };
+            const initial = (d.fullName ?? "?").charAt(0).toUpperCase();
             return (
-              <li key={r.id} className="rounded-lg border border-border p-3">
-                <div className="truncate text-sm font-medium">{d.fullName}</div>
-                <div className="truncate text-xs text-muted-foreground">{d.email}</div>
+              <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border p-3 transition-colors hover:bg-secondary/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  {initial}
+                </div>
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium text-foreground">{d.fullName}</div>
+                  <div className="truncate text-xs text-muted-foreground">{d.email}</div>
+                </div>
               </li>
             );
           })}
           {recipients.length === 0 && (
-            <li className="py-6 text-center text-sm text-muted-foreground">
+            <li className="py-8 text-center text-sm text-muted-foreground">
               No matching recipients.
             </li>
           )}

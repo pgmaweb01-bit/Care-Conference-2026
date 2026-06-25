@@ -47,24 +47,27 @@ function AdminLogin() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary/40 px-4">
-      <div className="w-full max-w-sm">
-        <div className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-elegant)]">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-primary/5 via-background to-gold/5 px-4">
+      <div className="pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="w-full max-w-sm animate-fade-in-up">
+        <div className="relative rounded-3xl border border-border/60 bg-card/90 p-8 shadow-[var(--shadow-elegant)] backdrop-blur-xl">
           <div className="mb-8 text-center">
-            <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold">
-              Care Conference
+            <div className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+              Care Conference 2026
             </div>
-            <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-foreground">
-              PURPLE
+            <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-foreground">
+              <span className="text-primary">PURPLE</span>
               <br />
-              GLOBAL
+              <span className="text-gold">GLOBAL</span>
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">Admin sign in</p>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-5">
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Username
               </label>
               <input
@@ -72,11 +75,12 @@ function AdminLogin() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 autoFocus
-                className="w-full rounded-xl border-2 border-transparent bg-secondary/70 px-4 py-3 text-sm focus:border-gold focus:bg-card focus:outline-none focus:shadow-[0_0_0_4px_oklch(0.769_0.188_70/0.15)]"
+                className="w-full rounded-xl border-2 border-transparent bg-secondary/70 px-4 py-3 text-sm shadow-sm transition-all placeholder:text-muted-foreground/50 focus:border-gold focus:bg-card focus:outline-none focus:shadow-[0_0_0_4px_oklch(0.769_0.188_70/0.15)]"
+                placeholder="Enter your username"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-foreground/80">
                 Password
               </label>
               <input
@@ -84,22 +88,35 @@ function AdminLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full rounded-xl border-2 border-transparent bg-secondary/70 px-4 py-3 text-sm focus:border-gold focus:bg-card focus:outline-none focus:shadow-[0_0_0_4px_oklch(0.769_0.188_70/0.15)]"
+                className="w-full rounded-xl border-2 border-transparent bg-secondary/70 px-4 py-3 text-sm shadow-sm transition-all placeholder:text-muted-foreground/50 focus:border-gold focus:bg-card focus:outline-none focus:shadow-[0_0_0_4px_oklch(0.769_0.188_70/0.15)]"
+                placeholder="Enter your password"
               />
             </div>
 
             {error && (
-              <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm text-destructive">
-                {error}
+              <div className="animate-fade-in rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-2.5 text-sm text-destructive">
+                <span className="font-medium">Error:</span> {error}
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex h-12 w-full items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-60"
+              className="group relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-primary to-primary/80 px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-60"
             >
-              {loading ? "Signing in…" : "Sign in"}
+              <span className="relative z-10">
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Signing in…
+                  </span>
+                ) : (
+                  "Sign in"
+                )}
+              </span>
             </button>
           </form>
         </div>

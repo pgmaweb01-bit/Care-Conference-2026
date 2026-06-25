@@ -3,6 +3,23 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
+async function handleQrApi(url: URL): Promise<Response | null> {
+  const match = url.pathname.match(/^\/api\/qr\/(.+)$/);
+  if (!match) return null;
+  try {
+    const QRCode = await import("qrcode");
+    const dataUrl = await QRCode.toDataURL(JSON.stringify({ id: match[1] }), {
+      width: 320, margin: 1, color: { dark: "#1e1b4b", light: "#ffffff" },
+    });
+    const buf = Buffer.from(dataUrl.split(",")[1], "base64");
+    return new Response(buf, {
+      headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" },
+    });
+  } catch {
+    return new Response("QR generation failed", { status: 500 });
+  }
+}
+
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
@@ -40,6 +57,8 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const qrResponse = await handleQrApi(new URL(request.url));
+      if (qrResponse) return qrResponse;
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
