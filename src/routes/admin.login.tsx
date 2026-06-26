@@ -53,14 +53,8 @@ function AdminLogin() {
       <div className="w-full max-w-sm animate-fade-in-up">
         <div className="relative rounded-3xl border border-border/60 bg-card/90 p-8 shadow-[var(--shadow-elegant)] backdrop-blur-xl">
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+            <h1 className="font-display text-3xl font-extrabold tracking-tight text-foreground">
               Care Conference 2026
-            </div>
-            <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-foreground">
-              <span className="text-primary">PURPLE</span>
-              <br />
-              <span className="text-gold">GLOBAL</span>
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">Admin sign in</p>
           </div>
