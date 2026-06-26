@@ -31,16 +31,8 @@ function RegisterPage() {
         <div className="pointer-events-none absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-gold/[0.06] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-primary/[0.04] blur-3xl" />
         <div className="relative mx-auto max-w-3xl px-6 pb-12 pt-20 sm:pb-16 sm:pt-24">
-          <div className="inline-flex items-center gap-2.5 rounded-full bg-gold/10 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-gold">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            Nigeria 2026
-          </div>
-          <h1 className="mt-5 font-display text-3xl sm:text-5xl font-extrabold leading-[1.08] tracking-tight text-foreground">
-            Register for{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Care Conference
-            </span>{" "}
-            <span className="text-gold">2026</span>
+          <h1 className="font-display text-3xl sm:text-5xl font-extrabold leading-[1.08] tracking-tight text-foreground">
+            Register for The Care Conference 2026
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
             Care as Infrastructure — Designing Nigeria's Next Decade of Homecare.
