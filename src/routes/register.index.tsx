@@ -106,45 +106,90 @@ function AttendeeForm() {
       ) : (
         <form onSubmit={onSubmit} className="space-y-8">
           <div className="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
-            <SectionTitle>Personal Details</SectionTitle>
+            <SectionTitle>Personal Information</SectionTitle>
             <div className="mt-5 grid gap-5 sm:grid-cols-2">
-              <Field label="Full Name" required>
-                <input name="fullName" required className={inputCls} />
+              <Field label="Full Name" required className="sm:col-span-2">
+                <input name="fullName" required className={inputCls} placeholder="Adaeze Okafor" />
               </Field>
-              <Field label="Email" required>
-                <input type="email" name="email" required className={inputCls} />
+              <Field label="Gender" required>
+                <select name="gender" required className={inputCls} defaultValue="">
+                  <option value="" disabled>Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </Field>
+              <Field label="Date of Birth">
+                <input type="date" name="dob" className={inputCls} />
+              </Field>
+              <Field label="Email Address" required>
+                <input type="email" name="email" required className={inputCls} placeholder="you@example.com" />
               </Field>
               <Field label="Phone Number" required>
-                <input type="tel" name="phone" required className={inputCls} />
+                <input type="tel" name="phone" required className={inputCls} placeholder="+234 ..." />
               </Field>
               <Field label="Country of Residence" required>
-                <input name="country" required className={inputCls} />
+                <input name="country" required className={inputCls} placeholder="Nigeria" />
+              </Field>
+              <Field label="State / Province">
+                <input name="state" className={inputCls} />
+              </Field>
+              <Field label="City">
+                <input name="city" className={inputCls} />
               </Field>
             </div>
           </div>
 
           <div className="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
-            <SectionTitle>Organization</SectionTitle>
+            <SectionTitle>Professional Information</SectionTitle>
             <div className="mt-5 grid gap-5 sm:grid-cols-2">
-              <Field label="Organization Name">
-                <input name="organization" className={inputCls} />
+              <Field label="Organization" required>
+                <input name="organization" required className={inputCls} />
               </Field>
-              <Field label="Job Title / Role">
+              <Field label="Profession" required>
+                <input name="profession" required className={inputCls} placeholder="Clinician, Researcher, Policy maker..." />
+              </Field>
+              <Field label="Specialty">
+                <input name="specialty" className={inputCls} />
+              </Field>
+              <Field label="Position / Role">
                 <input name="position" className={inputCls} />
+              </Field>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
+            <SectionTitle>Conference Information</SectionTitle>
+            <div className="mt-5 space-y-5">
+              <fieldset>
+                <legend className="text-sm font-medium text-foreground mb-2">First-time attendee?</legend>
+                <div className="flex gap-6 text-sm text-foreground">
+                  <label className="inline-flex items-center gap-2">
+                    <input type="radio" name="firstTime" value="yes" defaultChecked /> Yes
+                  </label>
+                  <label className="inline-flex items-center gap-2">
+                    <input type="radio" name="firstTime" value="no" /> No
+                  </label>
+                </div>
+              </fieldset>
+              <Field label="Special needs or accessibility requirements">
+                <textarea name="specialNeeds" rows={3} className={inputCls} placeholder="Optional" />
               </Field>
             </div>
           </div>
 
           <div className="flex items-center justify-between border-t border-border pt-6">
             <p className="text-xs text-muted-foreground">
-              Your data is handled in accordance with our privacy policy.
+              By registering you agree to receive event communications.
             </p>
             <button
               type="submit"
               disabled={submitting}
-              className="btn-primary h-11"
+              className="group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary via-primary to-primary/80 px-7 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-60"
             >
-              {submitting ? "Registering…" : "Register"}
+              <span className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/10 to-gold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <span className="relative z-10">
+                {submitting ? "Registering\u2026" : "Complete Registration"}
+              </span>
             </button>
           </div>
         </form>
