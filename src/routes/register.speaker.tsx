@@ -66,7 +66,7 @@ export function SpeakerRegister() {
                 Submit your speaker profile
               </h1>
               <p className="mt-3 text-muted-foreground">
-                Includes session details, travel and accommodation logistics. Sensitive information
+                Includes travel and accommodation logistics. Sensitive information
                 is restricted to authorised staff.
               </p>
             </div>
@@ -166,30 +166,6 @@ export function SpeakerRegister() {
                     <input type="file" name="cv" accept=".pdf,.doc,.docx" className={inputCls} />
                   </Field>
                 </div>
-              </div>
-
-              <div className="space-y-5">
-                <SectionTitle>Session Details</SectionTitle>
-                <Field label="Session Title" required>
-                  <input name="sessionTitle" required className={inputCls} />
-                </Field>
-                <Field label="Session Description" required>
-                  <textarea name="sessionDescription" required rows={4} className={inputCls} />
-                </Field>
-                <Field label="Learning Objectives">
-                  <textarea name="learningObjectives" rows={3} className={inputCls} />
-                </Field>
-                <Field label="Presentation Type">
-                  <select name="presentationType" className={inputCls} defaultValue="">
-                    <option value="" disabled>
-                      Select
-                    </option>
-                    <option>Keynote</option>
-                    <option>Panel</option>
-                    <option>Workshop</option>
-                    <option>Lightning Talk</option>
-                  </select>
-                </Field>
               </div>
 
               <div className="space-y-5">

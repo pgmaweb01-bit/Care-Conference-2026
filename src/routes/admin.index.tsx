@@ -115,32 +115,25 @@ function AdminOverview() {
   ] as const;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {statCards.map((s) => (
           <div
             key={s.label}
-            className={`group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
-              s.accent === "gold"
-                ? "hover:border-gold/30 hover:shadow-gold/5"
-                : "hover:border-primary/20 hover:shadow-primary/5"
-            }`}
+            className="relative overflow-hidden rounded-xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md"
           >
-            <div className={`absolute inset-x-0 top-0 h-1 ${s.accent === "gold" ? "bg-gradient-to-r from-gold/80 to-gold" : "bg-gradient-to-r from-primary/80 to-primary"}`} />
-            <div className="relative flex items-center justify-between">
-              <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {s.label}
-              </div>
+              </span>
               <div className={`rounded-lg p-2 ${s.accent === "gold" ? "bg-gold/10 text-gold" : "bg-primary/10 text-primary"}`}>
                 <s.icon className="h-4 w-4" />
               </div>
             </div>
-            <div className="relative mt-4 flex items-baseline gap-2">
-              <span className="font-display text-4xl font-extrabold tracking-tight text-foreground">
-                {s.value}
-              </span>
+            <div className="mt-3 font-display text-3xl font-extrabold tracking-tight text-foreground">
+              {s.value}
             </div>
-            <div className={`relative mt-3 h-1.5 rounded-full bg-secondary/80 overflow-hidden`}>
+            <div className="mt-3 h-1.5 rounded-full bg-secondary">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   s.accent === "gold" ? "bg-gold/40" : "bg-primary/40"
@@ -153,11 +146,11 @@ function AdminOverview() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="font-display text-lg text-foreground">Registration Trend</h3>
-              <p className="text-xs text-muted-foreground">Cumulative registrations over time</p>
+              <h3 className="font-display text-base font-bold text-foreground">Registration Trend</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Cumulative registrations over time</p>
             </div>
             <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium text-primary">
               {trend.length > 0 ? `${trend[trend.length - 1].total} total` : "No data"}
@@ -181,7 +174,7 @@ function AdminOverview() {
                 <YAxis stroke="oklch(0.65 0.03 257)" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={{
-                    borderRadius: 12,
+                    borderRadius: 10,
                     border: "1px solid oklch(0.92 0.01 257)",
                     boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
                     padding: "8px 12px",
@@ -207,11 +200,9 @@ function AdminOverview() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div>
-            <h3 className="font-display text-lg text-foreground">By Country</h3>
-            <p className="text-xs text-muted-foreground">Top 6 represented countries</p>
-          </div>
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h3 className="font-display text-base font-bold text-foreground">By Country</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Top 6 represented countries</p>
           <div className="mt-2 h-72">
             <ResponsiveContainer>
               <PieChart>
@@ -240,11 +231,9 @@ function AdminOverview() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div>
-            <h3 className="font-display text-lg text-foreground">Professional Categories</h3>
-            <p className="text-xs text-muted-foreground">Distribution across fields</p>
-          </div>
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h3 className="font-display text-base font-bold text-foreground">Professional Categories</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Distribution across fields</p>
           <div className="mt-4 h-64">
             <ResponsiveContainer>
               <BarChart data={byProfession} layout="vertical" margin={{ left: 20 }}>
@@ -265,7 +254,7 @@ function AdminOverview() {
                 />
                 <Tooltip
                   contentStyle={{
-                    borderRadius: 12,
+                    borderRadius: 10,
                     border: "1px solid oklch(0.92 0.01 257)",
                     boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
                     padding: "8px 12px",
@@ -282,11 +271,11 @@ function AdminOverview() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-display text-lg text-foreground">Recent Registrations</h3>
-              <p className="text-xs text-muted-foreground">Latest sign-ups</p>
+              <h3 className="font-display text-base font-bold text-foreground">Recent Registrations</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Latest sign-ups</p>
             </div>
             <Link
               to="/admin/attendees"
@@ -299,7 +288,7 @@ function AdminOverview() {
             {records
               .slice(-6)
               .reverse()
-              .map((r, idx) => {
+              .map((r) => {
                 const d = r.data as { fullName?: string; organization?: string };
                 const initial = (d.fullName ?? "A").charAt(0).toUpperCase();
                 return (

@@ -1,6 +1,10 @@
 import { Link } from "@tanstack/react-router";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/use-theme";
 
 export function SiteHeader() {
+  const { theme, toggle } = useTheme();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -17,7 +21,14 @@ export function SiteHeader() {
             </div>
           </div>
         </Link>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggle}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span className="sr-only">Toggle theme</span>
+          </button>
           <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
             <Link to="/register" className="font-medium transition-colors hover:text-foreground">
               Register

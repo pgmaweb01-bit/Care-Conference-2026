@@ -13,9 +13,9 @@ export function Field({
 }) {
   return (
     <label className={`block space-y-1.5 ${className}`}>
-      <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-primary/80">
+      <span className="block text-xs font-medium text-muted-foreground">
         {label}
-        {required && <span className="ml-1 text-destructive">*</span>}
+        {required && <span className="ml-0.5 text-destructive">*</span>}
       </span>
       {children}
     </label>
@@ -23,7 +23,7 @@ export function Field({
 }
 
 export const inputCls =
-  "w-full rounded-xl border-2 border-transparent bg-secondary/60 px-4 py-3 text-sm font-medium text-foreground shadow-sm transition-all placeholder:font-normal placeholder:text-muted-foreground/50 focus:border-gold focus:bg-card focus:outline-none focus:ring-0 focus:shadow-[0_0_0_4px_oklch(0.769_0.188_70/0.15)] focus:scale-[1.01]";
+  "w-full rounded-lg border border-input bg-card px-3.5 py-2.5 text-sm text-foreground shadow-sm transition-all placeholder:text-muted-foreground/50 focus:border-ring focus:outline-none focus:shadow-[0_0_0_3px_oklch(0.769_0.188_70/0.1)]";
 
 export function SectionTitle({
   children,
@@ -35,20 +35,20 @@ export function SectionTitle({
   step?: number;
 }) {
   return (
-    <div className="border-b border-border pb-4">
+    <div>
       <div className="flex items-center gap-3">
         {step !== undefined && (
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-[13px] font-extrabold text-primary-foreground shadow-md">
-            {String(step).padStart(2, "0")}
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
+            {step}
           </span>
         )}
         <div>
-          <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground">
+          <h2 className="font-display text-lg font-bold tracking-tight text-foreground">
             {children}
           </h2>
         </div>
       </div>
-      {hint && <p className="mt-2 text-sm text-muted-foreground/80">{hint}</p>}
+      {hint && <p className="mt-1.5 text-sm text-muted-foreground">{hint}</p>}
     </div>
   );
 }
